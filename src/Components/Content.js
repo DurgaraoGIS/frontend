@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie'
-import {Navigate} from 'react-router-dom'
+import {Navigate, useNavigate} from 'react-router-dom'
 import './Content.css'
 import Button from 'react-bootstrap/Button';
 
@@ -14,11 +14,13 @@ export default function Content() {
     const [show, setShow] = useState(false);
     const [showes, setShowes] = useState(false);
     const [editId,setId]=useState(0)
+    const [userdetails,setuserdetails]=useState()
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleCloses = () => setShowes(false);
     const handleShows = () => setShowes(true);
     const jwtToken=Cookies.get("jwtToken")
+    const navigate=useNavigate()
     
     const header = useMemo(() => {
       return {
@@ -69,6 +71,11 @@ export default function Content() {
 
         
     }
+    const logoutOf=()=>{
+      Cookies.remove('jwtToken')
+      navigate('/login')
+      
+    }
 
     const nameOf=(event)=>{
         setname(event.target.value)
@@ -78,13 +85,29 @@ export default function Content() {
     }
     
     useEffect(() => {
+      const function1=async()=>{
+        try{
+          const response=await axios.get("http://localhost:5000/",{headers:header})
+          setdata(response.data)
+
+        }catch(error){
+          console.error('Error fetching data:', error);
+        }
+        
+
+      }
+      const function2=async()=>{
+        try{
+          const response=await axios.get("http://localhost:5000/user",{headers:header})
+          setuserdetails(response.data)
+        }catch(error){
+          console.log(error)
+        }
+      }
+      function1()
+      function2()
       
-        axios.get("http://localhost:5000/",{headers:header})
-            .then(res => {
-                console.log(res)
-                setdata(res.data)
-            })
-            .catch(err => console.log(err))
+        
     },[header])
 
     const deleteOf = (id) => {
@@ -118,7 +141,15 @@ export default function Content() {
     else{
     return (
         <div>
+            <div className='d-flex flex-row justify-content-center align-item-center'>
             <center><h1>Products</h1></center>
+            <div className='mt-2'>
+            <Button onClick={logoutOf}>Logout</Button>
+
+            </div>
+            
+            </div>
+            <h1>hello {userdetails}</h1>
             <>
      <center>
       <Button className='m-2' onClick={sortByName}>Name</Button>

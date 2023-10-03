@@ -85,7 +85,7 @@ return (
           <label>Password</label><br />
           <input type="password" onChange={passOf} /><br />
           <Button className='m-2' type="submit">submit</Button>
-          <Button className='m-2' onClick={onsignup}>Sign u</Button>
+          <Button className='m-2' onClick={onsignup}>Sign up</Button>
 
         </form>
       </center>
