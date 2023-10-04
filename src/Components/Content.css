@@ -1,6 +1,9 @@
 .list_item{
     list-style-type: none;
-    display: flex;
-    justify-content: space-between;
+    
 
+}
+.products{
+    border:2px solid black;
+    text-align: center;
 }
