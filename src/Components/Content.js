@@ -14,13 +14,16 @@ export default function Content() {
   const [show, setShow] = useState(false);
   const [showes, setShowes] = useState(false);
   const [editId, setId] = useState(0)
-  const [userdetails, setuserdetails] = useState()
+  const [userdetails, setuserdetails] = useState({})
   const handleClose = () => setShow(false);
   // const handleShow = () => setShow(true);
   const handleCloses = () => setShowes(false);
   // const handleShows = () => setShowes(true);
   const jwtToken = Cookies.get("jwtToken")
   const navigate = useNavigate()
+  console.log(userdetails.username)
+  
+  
 
   const header = useMemo(() => {
     return {
@@ -89,6 +92,7 @@ export default function Content() {
       try {
         const response = await axios.get("http://localhost:5000/", { headers: header })
         setdata(response.data)
+        console.log(response)
 
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -99,6 +103,7 @@ export default function Content() {
     const function2 = async () => {
       try {
         const response = await axios.get("http://localhost:5000/user", { headers: header })
+        console.log(response.data.username)
         setuserdetails(response.data)
       } catch (error) {
         console.log(error)
@@ -134,6 +139,15 @@ export default function Content() {
       })
       .catch(err => console.log(err))
   }
+  const addtocart=(details)=>{
+    console.log(details)
+    axios.post(`http://localhost:5000/${userdetails.user_id}`,details)
+    .then(res=>{
+      console.log(res.data)
+    })
+    .catch(error=>console.log(error))
+  }
+  
 
   if (jwtToken === undefined) {
     return <Navigate to="/login" />
@@ -150,8 +164,9 @@ export default function Content() {
 
         </div>
         <div className='d-flex justify-content-between'>
-          <h1>Hello {userdetails}</h1>
+          <h1>Hello  {userdetails.username} </h1>
           <Button onClick={()=>navigate('/cart')}>Cart</Button>
+          
 
         </div>
 
@@ -222,7 +237,7 @@ export default function Content() {
                   <button onClick={() => editOf(eachitem.idproducts)}>Edit</button>
                   </div> */}
                 <div className='p-1'>
-                  <Button type="button" className='m-1'>ADD</Button>
+                  <Button type="button" className='m-1' onClick={()=>addtocart(eachitem)}>ADD</Button>
                   <Button type="button" className='m-1'>BUY NOW</Button>
                 </div>
 
